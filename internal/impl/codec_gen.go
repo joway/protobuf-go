@@ -9,6 +9,7 @@ package impl
 import (
 	"math"
 	"unicode/utf8"
+	"unsafe"
 
 	"google.golang.org/protobuf/encoding/protowire"
 	"google.golang.org/protobuf/reflect/protoreflect"
@@ -4974,7 +4975,7 @@ func consumeStringValidateUTF8(b []byte, p pointer, wtyp protowire.Type, f *code
 	if !utf8.Valid(v) {
 		return out, errInvalidUTF8{}
 	}
-	*p.String() = string(v)
+	*p.String() = *(*string)(unsafe.Pointer(&v))
 	out.n = n
 	return out, nil
 }
